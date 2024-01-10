@@ -7,6 +7,10 @@ import torch
 import torch.nn as nn
 
 from utils.downloads import attempt_download
+import pathlib
+
+temp = pathlib.PosixPath
+pathlib.PosixPath = pathlib.WindowsPath
 
 
 class Sum(nn.Module):
