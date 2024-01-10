@@ -32,6 +32,7 @@ Usage - formats:
                                  yolov5s_edgetpu.tflite     # TensorFlow Edge TPU
                                  yolov5s_paddle_model       # PaddlePaddle
 """
+import datetime
 
 import argparse
 import csv
@@ -223,6 +224,15 @@ def run(
                         c = int(cls)  # integer class
                         label = None if hide_labels else (names[c] if hide_conf else f"{names[c]} {conf:.2f}")
                         annotator.box_label(xyxy, label, color=colors(c, True))
+
+                        #zerrin
+                        #lasitk tespit edildikten sonra kare içine alınıyor. %90 oranında yapılan tahminlerden Kare içine alınan alanın biryere kaydedilmesini sağlar 
+                        if confidence > 0.9 :
+                            predict_img = im0s[int(xyxy[1]):int(xyxy[3]), int(xyxy[0]):int(xyxy[2])]
+                            cv2.imwrite('C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\images\\crop{0}.png'.format(datetime.datetime.now().strftime("%Y%m%d_%H%M%S")), predict_img)
+                            cv2.imshow("",predict_img)                        
+                            cv2.waitKey(0)  
+                        #zerrin
                     if save_crop:
                         save_one_box(xyxy, imc, file=save_dir / "crops" / names[c] / f"{p.stem}.jpg", BGR=True)
 
@@ -271,7 +281,7 @@ def run(
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument("--weights", nargs="+", type=str, default=ROOT / "runs/train/yolov5s_results/weights/best.pt", help="model path or triton URL")
-    parser.add_argument("--source", type=str, default=ROOT / "data/images", help="file/dir/URL/glob/screen/0(webcam)")
+    parser.add_argument("--source", type=str, default=ROOT / "data/images/images", help="file/dir/URL/glob/screen/0(webcam)")
     parser.add_argument("--data", type=str, default=ROOT / "data.yaml", help="(optional) dataset.yaml path")
     parser.add_argument("--imgsz", "--img", "--img-size", nargs="+", type=int, default=[640], help="inference size h,w")
     parser.add_argument("--conf-thres", type=float, default=0.25, help="confidence threshold")
