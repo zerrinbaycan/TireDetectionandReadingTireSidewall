@@ -40,6 +40,8 @@ import os
 import platform
 import sys
 from pathlib import Path
+import LastikDuzlestir as ld
+
 
 import torch
 
@@ -229,9 +231,10 @@ def run(
                         #lasitk tespit edildikten sonra kare içine alınıyor. %90 oranında yapılan tahminlerden Kare içine alınan alanın biryere kaydedilmesini sağlar 
                         if confidence > 0.9 :
                             predict_img = im0s[int(xyxy[1]):int(xyxy[3]), int(xyxy[0]):int(xyxy[2])]
-                            cv2.imwrite('C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\images\\crop{0}.png'.format(datetime.datetime.now().strftime("%Y%m%d_%H%M%S")), predict_img)
+                            cv2.imwrite('C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\images\\crop{0}.jpg'.format(datetime.datetime.now().strftime("%Y%m%d_%H%M%S")), predict_img)
                             cv2.imshow("",predict_img)                        
                             cv2.waitKey(0)  
+                            ld.LastigiDuzlestir(predict_img)
                         #zerrin
                     if save_crop:
                         save_one_box(xyxy, imc, file=save_dir / "crops" / names[c] / f"{p.stem}.jpg", BGR=True)
@@ -281,7 +284,7 @@ def run(
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument("--weights", nargs="+", type=str, default=ROOT / "runs/train/yolov5s_results/weights/best.pt", help="model path or triton URL")
-    parser.add_argument("--source", type=str, default=ROOT / "data/images/images", help="file/dir/URL/glob/screen/0(webcam)")
+    parser.add_argument("--source", type=str, default=ROOT / "data/images/wisetire", help="file/dir/URL/glob/screen/0(webcam)")
     parser.add_argument("--data", type=str, default=ROOT / "data.yaml", help="(optional) dataset.yaml path")
     parser.add_argument("--imgsz", "--img", "--img-size", nargs="+", type=int, default=[640], help="inference size h,w")
     parser.add_argument("--conf-thres", type=float, default=0.25, help="confidence threshold")
@@ -292,7 +295,7 @@ def parse_opt():
     parser.add_argument("--save-txt", action="store_true", help="save results to *.txt")
     parser.add_argument("--save-csv", action="store_true", help="save results in CSV format")
     parser.add_argument("--save-conf", action="store_true", help="save confidences in --save-txt labels")
-    parser.add_argument("--save-crop", action="store_true", help="save cropped prediction boxes")
+    parser.add_argument("--save-crop", default=True,action="store_true", help="save cropped prediction boxes")
     parser.add_argument("--nosave", action="store_true", help="do not save images/videos")
     parser.add_argument("--classes", nargs="+", type=int, help="filter by class: --classes 0, or --classes 0 2 3")
     parser.add_argument("--agnostic-nms", action="store_true", help="class-agnostic NMS")
