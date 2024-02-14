@@ -1,0 +1,2 @@
+**applyTireFlat.py dosyası içinde try-except blokları var anlamalı hatalar döndür ve bu hataları proje sonunda bi yerde kaydet.
+

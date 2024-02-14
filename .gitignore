@@ -5,5 +5,10 @@
 *.mp4
 *.txt
 
+
+!notlar.txt
+!ToDoList.txt
+
+
 __pycache__/
 utils/
