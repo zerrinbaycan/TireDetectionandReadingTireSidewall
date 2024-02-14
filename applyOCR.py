@@ -1,4 +1,43 @@
 #pytesseract ile yazıları tespit etmeye çalıştım ama başarılı olmadı. easyocr metinleri bulmada çok daha başarılı o yüzden easyocr ile devam edicem
+import easyocr
+import cv2
+import numpy as np
+
+def ApplyOcr(img,dosya_Adi):
+    try:
+        img = cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
+        # OCR modelini yükle
+        reader = easyocr.Reader(['en'])
+        imgH , imgW,_ = img.shape#resmin boyutlarını alıyoruz. x,y,height,width bilgileri
+
+        # Metinleri tanı
+        result = reader.readtext(img)
+
+        # Algılanan metinleri kare içine al ve orijinal resim üzerine çiz
+        for detection in result:
+            points = detection[0]  # Algılanan metnin köşe noktalarını al
+
+            min_coordinates = np.min(points, axis=0)
+            max_coordinates = np.max(points, axis=0)
+            x,y,w,h = int(min_coordinates[0]),int(min_coordinates[1]),int(max_coordinates[0]),int(max_coordinates[1])    
+
+            cv2.rectangle(img,(x, y),(w, h),(0,0,255),5)#her harf için kutu çizdiriyoruz.
+            cv2.putText(img,detection[1],(x,y+10),cv2.FONT_HERSHEY_COMPLEX,1,(255,0,0),2)
+    
+
+        # resmi kaydet
+        output_path = 'C:\\Users\\Zerrin Baycan\\Desktop\\testresim\\morphologicalProcesses\\OCR\\' + dosya_Adi
+        cv2.imwrite(output_path, img)
+    except:
+        print("ApplyOcr Hata")
+
+
+
+
+
+
+
+
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -78,7 +117,6 @@ axis.axis('off')
 plt.show()
 """
 
-
 """
 #resim üzerindeki karakterleri kare içine aldırmayı sağlar.
 import pytesseract
@@ -133,9 +171,7 @@ ApplyOcr(img)
 
 """
 
-
-
-"""
+""" 
 ##################easyocr##################
 import easyocr
 import cv2

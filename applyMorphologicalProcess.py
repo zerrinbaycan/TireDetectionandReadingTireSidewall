@@ -2,7 +2,7 @@ import cv2
 import os 
 import numpy as np
 from matplotlib import pyplot as plt
-#import applyOCR as ao
+import applyOCR as ao
 
 # (Contrast Limited Adaptive Histogram Equalization)   kontrast artırma ve görüntü iyileştirme amacıyla kullanılır.adaptif bir şekilde kontrastı artırmaktır. Bu yöntem, görüntüdeki farklı bölgelerin farklı kontrast düzeylerine sahip olabileceği durumları ele alır. Özellikle, bir görüntüde belirli bir bölgede kontrast arttırılırken, bu artışın komşu bölgelere olumsuz bir etki yapmamasını sağlar.
 #histogram eşitleme genellikle genel kontrast iyileştirmesi için kullanılırken, gama düzeltme daha özelleştirilebilir parlaklık ve kontrast ayarı için tercih edilebilir. Laplacian filtresi ise özellikle kenar tespiti ve detayları belirginleştirmek için uygundur
@@ -59,16 +59,25 @@ def applyMorphologicalProcess(img,detectfile_dir,dosya_adi):
         print("Morphological Process Hata")
 ###################################################################################################################################################
 
-yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\flattire"
+yol = "C:\\Users\\Zerrin Baycan\\Desktop\\testresim"
 for dosya_adi in os.listdir(yol):
     dosya_yolu = os.path.join(yol, dosya_adi)
     
     if os.path.isfile(dosya_yolu):
 
         img = cv2.imread(dosya_yolu,0)
-        path = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop"
-        image = applyMorphologicalProcess(img,path,dosya_adi)  
+        image = applyMorphologicalProcess(img,yol,dosya_adi)  
 
-        gray10 = cv2.threshold(image,100,255,cv2.THRESH_OTSU)[1]        
-        cv2.imshow("gray0_10",gray10)
-        cv2.waitKey(0)
+        gray10 = cv2.threshold(image,100,255,cv2.THRESH_OTSU)[1]  
+        mainfile_tire_dir = os.path.join(yol, 'morphologicalProcesses') 
+
+        Threshold_dir = os.path.join(mainfile_tire_dir, 'Threshold')        
+        if not os.path.exists(Threshold_dir):
+            os.mkdir(Threshold_dir)
+
+        Threshold_dir = os.path.join(Threshold_dir, dosya_adi)
+        cv2.imwrite(Threshold_dir,gray10)
+
+        ao.ApplyOcr(img,dosya_adi)
+
+
