@@ -1,4 +1,70 @@
 #pytesseract ile yazıları tespit etmeye çalıştım ama başarılı olmadı. easyocr metinleri bulmada çok daha başarılı o yüzden easyocr ile devam edicem
+import os
+import easyocr
+import cv2
+import numpy as np
+import pytesseract
+
+def ApplyOcr(img,file_dir,dosya_adi):
+    try:
+        img = cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
+        # OCR modelini yükle
+        reader = easyocr.Reader(['en'])
+        imgH , imgW,_ = img.shape#resmin boyutlarını alıyoruz. x,y,height,width bilgileri
+
+        # Metinleri tanı
+        result = reader.readtext(img)
+
+        # Algılanan metinleri kare içine al ve orijinal resim üzerine çiz
+        for detection in result:
+            points = detection[0]  # Algılanan metnin köşe noktalarını al
+
+            min_coordinates = np.min(points, axis=0)
+            max_coordinates = np.max(points, axis=0)
+            x,y,w,h = int(min_coordinates[0]),int(min_coordinates[1]),int(max_coordinates[0]),int(max_coordinates[1])    
+
+            cv2.rectangle(img,(x, y),(w, h),(0,0,255),5)#her harf için kutu çizdiriyoruz.
+            cv2.putText(img,detection[1],(x,y+10),cv2.FONT_HERSHEY_COMPLEX,1,(255,0,0),2)
+    
+
+        # resmi kaydet
+        file_dir = os.path.join(file_dir, 'OCR')        
+        if not os.path.exists(file_dir):
+            os.mkdir(file_dir)
+
+        file_dir = os.path.join(file_dir, dosya_adi)
+        cv2.imwrite(file_dir, img)
+    except:
+        print("ApplyOcr Hata")
+
+def ApplyOcrteseract(img,file_dir,dosya_adi):
+    try:
+        #pyteseract yolunu her zaman yazıyoruz
+        pytesseract.pytesseract.tesseract_cmd = "C:\Program Files\Tesseract-OCR\\tesseract.exe"
+        img = cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
+        #karakterleri tespit ediyoruz
+        imgH , imgW,_ = img.shape#resmin boyutlarını alıyoruz. x,y,height,width bilgileri
+        config = r'--oem 3 --psm 6 tessedit_write_images true -l eng+fra'# Örneğin, İngilizce (eng) ve Fransızca (fra) dil modelleri
+        boxes = pytesseract.image_to_boxes(img)#her karakterin koordinatlarıyla, genişlik ve yüksekliğini belirliyoruz
+        
+        for b in boxes.splitlines(): 
+            
+            #Array liste dönüştürüyoruz
+            #x 218 51 224 58 0    =>     ['x', '218', '51', '224', '58', '0']
+                   
+            b= b.split(' ')
+            print(b)
+            #array listten her bir karaktere kutu çizmek için koordinatları alıyoruz
+            x,y,w,h = int(b[1]),int(b[2]),int(b[3]),int(b[4])
+            print(x,y,w,h)
+
+            cv2.rectangle(img,(x,imgH - y),(w,imgH - h),(0,0,255),1)#her harf için kutu çizdiriyoruz.
+            cv2.putText(img,b[0],(x,imgH - y+25),cv2.FONT_HERSHEY_COMPLEX,1,(255,0,0),2)
+            
+        file_dir = os.path.join(file_dir, "teseract_" + dosya_adi)
+        cv2.imwrite(file_dir, img)
+    except:
+        print("ApplyOcr Hata")
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -134,37 +200,3 @@ ApplyOcr(img)
 """
 
 
-
-"""
-##################easyocr##################
-import easyocr
-import cv2
-import numpy as np
-
-# OCR modelini yükle
-reader = easyocr.Reader(['en'])
-
-# Resmi oku
-image_path = 'C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\morphologicalProcesses\\treshold\\GAUSSIAN_150_18.jpg'
-image = cv2.imread(image_path)
-imgH , imgW,_ = image.shape#resmin boyutlarını alıyoruz. x,y,height,width bilgileri
-
-# Metinleri tanı
-result = reader.readtext(image_path)
-
-# Algılanan metinleri kare içine al ve orijinal resim üzerine çiz
-for detection in result:
-    points = detection[0]  # Algılanan metnin köşe noktalarını al
-
-    min_coordinates = np.min(points, axis=0)
-    max_coordinates = np.max(points, axis=0)
-    x,y,w,h = int(min_coordinates[0]),int(min_coordinates[1]),int(max_coordinates[0]),int(max_coordinates[1])    
-
-    cv2.rectangle(image,(x, y),(w, h),(0,0,255),5)#her harf için kutu çizdiriyoruz.
-    cv2.putText(image,detection[1],(x,y+10),cv2.FONT_HERSHEY_COMPLEX,1,(255,0,0),2)
-    
-
-# resmi kaydet
-output_path = 'C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\morphologicalProcesses\\11111.jpg'
-cv2.imwrite(output_path, image)
-"""
