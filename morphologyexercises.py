@@ -1,4 +1,5 @@
 #burda lastik üzerinde yapılacak işlemleri test etmek  için kod parçaları vardır.
+#Testler burdan yapılabilir.
 import cv2
 import os 
 import numpy as np
@@ -107,8 +108,8 @@ def SharpImage(image):
 
     return sharp
 
-"""
 #Lastiğe uygulanabilecek filtreleri denemeyi sağlıyor
+"""
 yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\tresholdtire"
 for dosya_adi in os.listdir(yol):
     dosya_yolu = os.path.join(yol, dosya_adi)
@@ -142,8 +143,8 @@ for dosya_adi in os.listdir(yol):
         cv2.imwrite(temp_flattire_dir,clache) 
 """
 
-"""
 #ClacheHistogram filtresi parametre değerlerini test etmeyi sağlıyor
+"""
 yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\tresholdtire"
 for dosya_adi in os.listdir(yol):
     dosya_yolu = os.path.join(yol, dosya_adi)
@@ -186,8 +187,8 @@ for dosya_adi in os.listdir(yol):
         cv2.imwrite(temp_flattire_dir,clahe)
 """
 
-"""
 #Lastiğe erosion,dilation morfolojik işlemlerini uygulama
+"""
 yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\tresholdtire\\treshold"
 for dosya_adi in os.listdir(yol):
     dosya_yolu = os.path.join(yol, dosya_adi)
@@ -240,8 +241,8 @@ for dosya_adi in os.listdir(yol):
         cv2.imwrite(temp_flattire_dir,blackhat)  
 """
 
-"""
 #Lastiğe uyguladığımız erode-dilate işlemleri kaydediyoruz
+"""
 yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\morphologicalProcesses"
 clache_yol = os.path.join(yol, "ClacheHistogram")
 erode_tire_dir = os.path.join(yol, 'clache_erode_dilate')
@@ -266,8 +267,8 @@ for dosya_adi in os.listdir(clache_yol):
         cv2.imwrite(temp_flattire_dir,dilation)  
 """
 
-"""
 #LAplacian filtresi. Resimler siyah oldu. işime yaramadı yada yanlış kullanmışda olabilirim
+"""
 yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\morphologicalProcesses"
 clache_yol = os.path.join(yol, "ClacheHistogram")
 treshold_tire_dir = os.path.join(yol, 'laplacian')
@@ -285,8 +286,8 @@ for dosya_adi in os.listdir(clache_yol):
         cv2.imwrite(temp_flattire_dir,laplacian)
 """
 
+#Unsharp Masking uygulama. Bununla resimlerdeki yazıları daha netleştitmeye çalıştım.
 """
-Unsharp Masking uygulama. Bununla resimlerdeki yazıları daha netleştitmeye çalıştım.
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -311,8 +312,8 @@ for dosya_adi in os.listdir(yol):
         cv2.imwrite(file_name,sharp)
 """
 
-"""
 # Frekans domaini örneği
+"""
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -351,8 +352,8 @@ cv2.waitKey(0)
 plt.show()
 """
 
-"""
 #Lastiğe 80-180 değerleri arasında  threshold işlemi uyguluyoruz
+"""
 yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\morphologicalProcesses"
 clache_yol = os.path.join(yol, "Erode")
 treshold_tire_dir = os.path.join(yol, 'treshold')
@@ -429,9 +430,8 @@ for dosya_adi in os.listdir(clache_yol):
         cv2.imwrite(temp_flattire_dir,thresh)
 """
 
-"""
-
 #Lastiğe uyguladığımız threshold işlemleri kaydediyoruz
+"""
 yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\morphologicalProcesses"
 clache_yol = os.path.join(yol, "ClacheHistogram")
 treshold_tire_dir = os.path.join(yol, 'treshold')

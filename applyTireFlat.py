@@ -34,4 +34,6 @@ def tireFlat(detectfile_dir):
     except Exception as e:
         print("LastigiDuzlestir Hata")
 
+#yolo ile tespit ettiğimiz sadece lastik olan alanı crop klasörüne kaydetmiştik.
+#Aşağıdaki kod satırını açarak elle crop dosyasındaki resimlere düzleştirme + morfolojik işlem + ocr uygulanabilir
 #tireFlat('data\\images\\detectimages\\crop')

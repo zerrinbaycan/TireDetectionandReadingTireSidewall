@@ -27,6 +27,7 @@ def Histequalize(img):
         print(e)
         print("Hata")
 
+#Bu metod applyTireFlat iççerisinden çağrılıyor.
 def applyMorphologicalProcess(img,detectfile_dir,dosya_adi):
     try:
         #flattire klasöründeki lineer hale getirdiğimiz lastikleri okuyup işlemleri yapıyoruz
@@ -55,12 +56,12 @@ def applyMorphologicalProcess(img,detectfile_dir,dosya_adi):
         if not os.path.exists(Histequalize_dir):
             os.mkdir(Histequalize_dir)
 
-        img2 = cv2.equalizeHist(img)
+        img2 = cv2.equalizeHist(img) #Kenar bulma sonrası histogram eşitleme yaptığımızda ocr sonuç bulmasında doğruluk artarmı kontrol etmek için ekledim
         Histequalize_dir = os.path.join(Histequalize_dir, dosya_adi)
         cv2.imwrite(Histequalize_dir,img2)
 
         ao.ApplyOcr(img,detectfile_dir,dosya_adi)
-
+        
         ao.ApplyOcr(img2,detectfile_dir,("_" + dosya_adi))
 
         return img
@@ -68,9 +69,12 @@ def applyMorphologicalProcess(img,detectfile_dir,dosya_adi):
             
     except Exception as e:
         print("Morphological Process Hata")
-###################################################################################################################################################
-"""
+
+######################### Test için aşağıdaki kodlar kullanılabilir #####################################
+
+
 #Bir dosya yolundaki resimler için morfolojik işlem metodunu çağıracaksak
+"""
 yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\flattire"
 for dosya_adi in os.listdir(yol):
     dosya_yolu = os.path.join(yol, dosya_adi)
@@ -82,10 +86,23 @@ for dosya_adi in os.listdir(yol):
         image = applyMorphologicalProcess(img,path,dosya_adi)  
 """
 
-
-"""
 #Tek bir resim için Ocr çalıştıracaksak
+"""
 yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\zerrin\\1.jpg"
 img = cv2.imread(yol,0)
 ao.ApplyOcr(img,"C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\zerrin","1.jpg")
+"""
+
+
+#Bir dosya yolundaki resimler için Ocr çalıştıracaksak
+"""
+yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\zerrin\\3"
+for dosya_adi in os.listdir(yol):
+    dosya_yolu = os.path.join(yol, dosya_adi)
+    
+    if os.path.isfile(dosya_yolu):
+
+        img = cv2.imread(dosya_yolu,0)
+        path = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\zerrin\\3"
+        ao.ApplyOcr(img,path,dosya_adi) 
 """
