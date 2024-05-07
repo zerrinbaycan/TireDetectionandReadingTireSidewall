@@ -88,21 +88,20 @@ for dosya_adi in os.listdir(yol):
 
 #Tek bir resim için Ocr çalıştıracaksak
 """
-yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\zerrin\\1.jpg"
+yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin\\erode.jpg"
 img = cv2.imread(yol,0)
-ao.ApplyOcr(img,"C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\zerrin","1.jpg")
+ao.ApplyOcr(img,"C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin","erode.jpg")
 """
 
 
 #Bir dosya yolundaki resimler için Ocr çalıştıracaksak
 """
-yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\zerrin\\3"
+yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin\\Canny\\Canny3"
 for dosya_adi in os.listdir(yol):
     dosya_yolu = os.path.join(yol, dosya_adi)
     
     if os.path.isfile(dosya_yolu):
 
         img = cv2.imread(dosya_yolu,0)
-        path = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\zerrin\\3"
-        ao.ApplyOcr(img,path,dosya_adi) 
+        ao.ApplyOcr(img,yol,dosya_adi) 
 """

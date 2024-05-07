@@ -1,2 +1,5 @@
 **applyTireFlat.py dosyası içinde try-except blokları var anlamalı hatalar döndür ve bu hataları proje sonunda bi yerde kaydet.
 
+sql için çalıştırılan komutlar
+pip install pymssql
+pip install pyodbc

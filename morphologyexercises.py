@@ -110,7 +110,7 @@ def SharpImage(image):
 
 #Lastiğe uygulanabilecek filtreleri denemeyi sağlıyor
 """
-yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\tresholdtire"
+yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin"
 for dosya_adi in os.listdir(yol):
     dosya_yolu = os.path.join(yol, dosya_adi)
 
@@ -118,7 +118,7 @@ for dosya_adi in os.listdir(yol):
 
         img = cv2.imread(dosya_yolu,0)
         
-        flattire_dir = os.path.join(yol, 'treshold')
+        flattire_dir = os.path.join(yol, 'filtre')
         if not os.path.exists(flattire_dir):
             os.mkdir(flattire_dir)
 
@@ -140,12 +140,17 @@ for dosya_adi in os.listdir(yol):
 
         clache = ApplyHistogramProcess(img)
         temp_flattire_dir = os.path.join(flattire_dir, ( "ApplyHistogram_" + dosya_adi)) 
-        cv2.imwrite(temp_flattire_dir,clache) 
-"""
+        cv2.imwrite(temp_flattire_dir,clache)
+
+        clache = SharpImage(img)
+        temp_flattire_dir = os.path.join(flattire_dir, ( "SharpImage_" + dosya_adi)) 
+        cv2.imwrite(temp_flattire_dir,clache)
+  """       
+
 
 #ClacheHistogram filtresi parametre değerlerini test etmeyi sağlıyor
 """
-yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\tresholdtire"
+yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin"
 for dosya_adi in os.listdir(yol):
     dosya_yolu = os.path.join(yol, dosya_adi)
 
@@ -153,7 +158,7 @@ for dosya_adi in os.listdir(yol):
 
         img = cv2.imread(dosya_yolu,0)
         
-        flattire_dir = os.path.join(yol, 'treshold')
+        flattire_dir = os.path.join(yol, 'Clache')
         if not os.path.exists(flattire_dir):
             os.mkdir(flattire_dir)
 
@@ -319,7 +324,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 # Resmi oku ve gri tonlamaya çevir
-image_path = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\flattire\\1.jpg"
+image_path = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin\\151.jpg"
 image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
 # Fourier dönüşümü uygula
@@ -345,7 +350,7 @@ img_back = np.abs(img_back)
 plt.subplot(121), plt.imshow(image, cmap='gray'), plt.title('Original Image')
 plt.subplot(122), plt.imshow(img_back, cmap='gray'), plt.title('Sharpened Image in Frequency Domain')
 
-cv2.imwrite("C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\flattire\\1_fft.jpg",img_back)
+cv2.imwrite("C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin\\151_fft.jpg",img_back)
 cv2.imshow("1",image)
 cv2.imshow("2",img_back)
 cv2.waitKey(0)
@@ -354,8 +359,8 @@ plt.show()
 
 #Lastiğe 80-180 değerleri arasında  threshold işlemi uyguluyoruz
 """
-yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\morphologicalProcesses"
-clache_yol = os.path.join(yol, "Erode")
+yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin"
+clache_yol =yol# os.path.join(yol, "Erode")
 treshold_tire_dir = os.path.join(yol, 'treshold')
 for dosya_adi in os.listdir(clache_yol):
     dosya_yolu = os.path.join(clache_yol, dosya_adi)
@@ -510,8 +515,8 @@ for dosya_adi in os.listdir(clache_yol):
 
 #Lastiğe uyguladığımız adaptiveThreshold işlemleri kaydediyoruz
 """
-yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\morphologicalProcesses"
-clache_yol = os.path.join(yol, "ClacheHistogram")
+yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin"
+clache_yol = yol# os.path.join(yol, "ClacheHistogram")
 treshold_tire_dir = os.path.join(yol, 'AdaptiveTreshold')
 for dosya_adi in os.listdir(clache_yol):
     dosya_yolu = os.path.join(clache_yol, dosya_adi)
@@ -668,3 +673,9 @@ cv2.imwrite("C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\d
 blurred = cv2.blur(img3,(3,3))
 cv2.imwrite("C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop\\morphologicalProcesses\\11113_blur.jpg",blurred)
 """
+
+
+image = cv2.imread("C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin\\17\\17.jpg", cv2.IMREAD_GRAYSCALE)
+image = cv2.cvtColor(image,cv2.COLOR_GRAY2BGR)
+image = cv2.cvtColor(image,cv2.COLOR_BGR2HSV)
+cv2.imwrite("C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin\\17\\hsv.jpg",image)
