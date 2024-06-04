@@ -60,9 +60,9 @@ def applyMorphologicalProcess(img,detectfile_dir,dosya_adi):
         Histequalize_dir = os.path.join(Histequalize_dir, dosya_adi)
         cv2.imwrite(Histequalize_dir,img2)
 
-        ao.ApplyOcr(img,detectfile_dir,dosya_adi)
+        #ao.ApplyOcr(img,detectfile_dir,dosya_adi)
         
-        ao.ApplyOcr(img2,detectfile_dir,("_" + dosya_adi))
+        #ao.ApplyOcr(img2,detectfile_dir,("_" + dosya_adi))
 
         return img
         
@@ -96,12 +96,22 @@ ao.ApplyOcr(img,"C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\image
 
 #Bir dosya yolundaki resimler için Ocr çalıştıracaksak
 """
-yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop4\\zerrin\\Canny\\Canny3"
+yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop9\\flattire"
 for dosya_adi in os.listdir(yol):
     dosya_yolu = os.path.join(yol, dosya_adi)
     
     if os.path.isfile(dosya_yolu):
 
         img = cv2.imread(dosya_yolu,0)
-        ao.ApplyOcr(img,yol,dosya_adi) 
+        ao.yazialaninnibul(img,yol,dosya_adi) 
+"""
+"""
+yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop9\\flattire\\yaziliolan_alan"
+for dosya_adi in os.listdir(yol):
+    dosya_yolu = os.path.join(yol, dosya_adi)
+    
+    if os.path.isfile(dosya_yolu):
+
+        img = cv2.imread(dosya_yolu,0)
+        ao.ApplyOcrteseract(img,yol,dosya_adi) 
 """

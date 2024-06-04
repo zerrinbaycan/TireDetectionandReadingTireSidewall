@@ -6,6 +6,46 @@ import numpy as np
 import pytesseract
 import _dbConnect as db
 import Levenshtein
+import findTextsimilaritydb as fts
+
+def yazialaninnibul(img,file_dir,dosya_adi):
+    try:
+        
+        text_list = []#bulduğu metinleri döndüreceğim liste
+
+        img = cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
+        # OCR modelini yükle
+        reader = easyocr.Reader(['en'])
+        imgH , imgW,_ = img.shape#resmin boyutlarını alıyoruz. x,y,height,width bilgileri
+
+        # Metinleri tanı
+        result = reader.readtext(img)
+
+        # Algılanan metinleri kare içine al ve orijinal resim üzerine çiz
+        i = 0
+        for detection in result:
+            points = detection[0]  # Algılanan metnin köşe noktalarını al
+
+            min_coordinates = np.min(points, axis=0)
+            max_coordinates = np.max(points, axis=0)
+            x,y,w,h = int(min_coordinates[0]),int(min_coordinates[1]),int(max_coordinates[0]),int(max_coordinates[1]) 
+
+            i += 1
+            yaziolan_alan = img[y-10:h+10,x-10:w+10]
+            isim = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop9\\flattire\\yaziliolan_alan\\yaziolan_alan_{}_{}".format(i,dosya_adi)
+            cv2.imwrite(isim, yaziolan_alan)
+
+        # resmi kaydet
+        file_dir = os.path.join(file_dir, 'OCR')        
+        if not os.path.exists(file_dir):
+            os.mkdir(file_dir)
+
+        file_dir = os.path.join(file_dir, dosya_adi)
+        cv2.imwrite(file_dir, img)
+
+        return text_list
+    except:
+        print("ApplyOcr Hata")
 
 def ApplyOcr(img,file_dir,dosya_adi):
     try:
@@ -74,7 +114,7 @@ def ApplyOcrteseract(img,file_dir,dosya_adi):
         print("ApplyOcr Hata")
 
 #Ocr sonucu bulunan textlerden istediğimiz bilgiler olmayanlar gelirse elemek için
-delete_textlist = ["RADIAL","TUBELESS","OUTSIDE","MADE IN"]
+delete_textlist = ["RADIAL","TUBELESS","OUTSIDE","MADE IN"," "]
 def OcrTextClear(ocr_text_list):
     for item in ocr_text_list:
         if item.upper() in delete_textlist:
@@ -85,15 +125,17 @@ Pattern = ""
 Size = ""
 
 
+
 """
 ###############   YÖNTEM 1 ####################################
 #BEGIN
 #isEbatmi() FONKSİYONU İLE EBATIN TESPİT EDİLMESİ İŞLEMİ
 
-#yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop6\\morphologicalProcesses\\Histequalize2\\12.jpg" #isEbatmi fonksiyonu için 195/55 
+yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop6\\morphologicalProcesses\\Histequalize2\\12.jpg" #isEbatmi fonksiyonu için 195/55 
 #yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop6\\morphologicalProcesses\\Histequalize2\\36.jpg" #isEbatmi fonksiyonu için 385/65 
 #yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop6\\morphologicalProcesses\\Histequalize2\\105.jpg" #isEbatmi fonksiyonu için 195[65R15 
-yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop6\\morphologicalProcesses\\Histequalize2\\52.jpg" #isEbatmi fonksiyonu için 385/55R22.5 ebatı aşgılamak için 
+#yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop6\\morphologicalProcesses\\Histequalize2\\52.jpg" #isEbatmi fonksiyonu için 385/55R22.5 ebatı aşgılamak için 
+#yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop7\\morphologicalProcesses\\Histequalize2\\IMG_1701.jpg" #isEbatmi fonksiyonu için 385/55R22.5 ebatı algılamak için 
 
 img = cv2.imread(yol,0)
 ocr_text_list = ApplyOcr(img,"C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop6\\zerrin","ocr.jpg")
@@ -128,8 +170,6 @@ if(len(EbatTahminleriArray) == 1):#sizearray tek elemanlı ise ebat olarak tek b
 #END
 ###############   YÖNTEM 1 ####################################
 """
-
-
 
 """
 ###############   YÖNTEM 2 ####################################
@@ -284,7 +324,6 @@ if(len(modeller) == 1):
 ###############   YÖNTEM 4 ####################################
 """
 
-
 """
 ###############   YÖNTEM 5 ####################################
 #BEGIN
@@ -355,9 +394,7 @@ for tire_info in tire_list:
 ###############   YÖNTEM 5 ####################################
 """
 
-
-
-""""""
+"""
 ###############   YÖNTEM 6 ####################################
 #BEGIN
 #Levenshtein Distance Algorithms
@@ -369,39 +406,73 @@ ocr_text_list = ApplyOcr(img,"C:\\ZerrinGit\\TireDetectionandReadingTireSidewall
 OcrTextClear(ocr_text_list) #kontrol etmememiz gereken kelimeler bulmuşsak eğer bunları siliyoruz.
 tire_list = db.getTireInfo()#db'deki lastik bilgilerini çekiyoruz.
 
-def levenshteinRecursive(str1, str2, m, n):
-      # str1 is empty
-    if m == 0:
-        return n
-    # str2 is empty
-    if n == 0:
-        return m
-    if str1[m - 1] == str2[n - 1]:
-        return levenshteinRecursive(str1, str2, m - 1, n - 1)
-    return 1 + min(
-          # Insert     
-        levenshteinRecursive(str1, str2, m, n - 1),
-        min(
-              # Remove
-            levenshteinRecursive(str1, str2, m - 1, n),
-          # Replace
-            levenshteinRecursive(str1, str2, m - 1, n - 1))
-    )
+param_metin = ""
+for txt in ocr_text_list:
+    if param_metin != "":
+        param_metin += "," 
+    temp = "''" + txt + "''"
+    param_metin += temp
 
-str1 = "kitten"
-str2 = "sitting"
-distance = levenshteinRecursive(str1, str2, len(str1), len(str2))
-print("Levenshtein Distance:", distance)
+res = db.findTireInfo(param_metin)#ocr listesindeki metinlerin marka,model,ebat alanarında eşiti varmı kontrol
+
+def levinshteinDistance(str1,str2):
+    
+    if(str1 == str2):
+        return 0
+    
+    len_str1 = len(str1)
+    len_str2 = len(str2)
+
+    if(len_str1 <= 0):
+        return len_str2
+    if(len_str2 <= 0):
+        return len_str1
+    
+    dp = [[0 for _ in range(len_str2 + 1)] for _ in range(len_str1 + 1)]
+
+    for i in range(0,len_str1+1):
+        dp[i][0] = i
+
+    for i in range(0,len_str2+1):
+        dp[0][i] = i
+
+    for i in range(1,len_str1+1):
+        for j in range(1,len_str2+1):
+            if(str1[i-1] == str2[j-1]):
+                dp[i][j] = dp[i-1][j-1]
+            else:
+                dp[i][j] = 1+ min(dp[i][j-1], dp[i-1][j], dp[i-1][j-1]) 
+
+    return dp[len_str1][len_str2]
+
+markaarr = []
+modelarr = []
+ebatarr = []
+
+for row in tire_list:
+    for ocr_text in ocr_text_list:
+         val = levinshteinDistance(ocr_text,row["Brand"])
+         if val < 3:
+            row_dict = {'Id': row.Id, 'Brand': row.Marka, 'Pattern': row.Model, 'Size': row.Ebat}
+            results_list.append(row_dict)
+
 #END
 ###############   YÖNTEM 6 ####################################
+"""
 
 
+###############   YÖNTEM 7 ####################################
+#BEGIN
+#yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop6\\morphologicalProcesses\\Histequalize2\\105.jpg" 
+#yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop10\\flattire\\IMG_2034.jpg" 
+yol = "C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop6\\morphologicalProcesses\\Histequalize\\12.jpg" 
 
+img = cv2.imread(yol,0)
+ocr_text_list = ApplyOcr(img,"C:\\ZerrinGit\\TireDetectionandReadingTireSidewall\\data\\images\\detectimages\\crop6\\zerrin","ocr.jpg")
+ret = fts.textsimilaritymain(ocr_text_list) #kontrol etmememiz gereken kelimeler bulmuşsak eğer bunları siliyoruz.
 
-
-
-
-
+#END
+###############   YÖNTEM 7 ####################################
 
 
 
@@ -545,5 +616,3 @@ cv2.waitKey(0)
 ApplyOcr(img)
 
 """
-
-

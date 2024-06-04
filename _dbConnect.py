@@ -10,6 +10,80 @@ password = 'Wise_3896!'
  # Bağlantı dizesini tanımlıyoruz
 conn_str = f'DRIVER={{SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
 
+
+
+def FindTireInfoFromOCRText(ocrlist):
+   
+   # Veritabanına bağlandık
+    conn = pyodbc.connect(conn_str)
+
+    # Bağlantı üzerinden bir cursor oluşturuyoruz
+    cursor = conn.cursor()
+
+    sql = """
+            select * from FindTireInfoFromOCRText (?)
+          """  
+    cursor.execute(sql,ocrlist)
+    
+    # Sonuçları alıyoruz
+    results = cursor.fetchall()
+
+
+    # Cursor ve bağlantıyı kapatıyoruz
+    cursor.close()
+    conn.close()
+
+    return results
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+def getallBrands():
+    select * from TireBrand where IsDeleted = 0 and IsCappedCasing = 0 order by Name
+
+
+def getallSizes():
+
+select T.Size
+from Tire T(nolock)
+	 INNER JOIN TireBrand TB(NOLOCK) ON TB.Id = T.TireBrandId
+where TB.IsDeleted = 0 and TB.IsCappedCasing = 0 AND T.IsDeleted = 0 AND RTRIM(LTRIM(Size)) <> ''
+GROUP BY T.Size
+ORDER BY T.Size
+
+def getallPatterns():
+select T.Pattern
+from Tire T(nolock)
+	 INNER JOIN TireBrand TB(NOLOCK) ON TB.Id = T.TireBrandId
+where TB.IsDeleted = 0 and TB.IsCappedCasing = 0 AND T.IsDeleted = 0 AND RTRIM(LTRIM(T.Pattern)) <> ''
+GROUP BY T.Pattern
+ORDER BY T.Pattern
+"""    
+
+
+
+
+
 #Bu metod bütün lastik listesini getirmeyi sağlar
 def getTireInfo():
    
@@ -158,6 +232,34 @@ def getSize(ebat,array,resultarray):
     conn.close()
 
     return results
+
+
+
+def findTireInfo(ocrlist):
+   
+   # Veritabanına bağlandık
+    conn = pyodbc.connect(conn_str)
+
+    # Bağlantı üzerinden bir cursor oluşturuyoruz
+    cursor = conn.cursor()
+
+    sql = """
+            select * from FindTireInfo (?)
+          """  
+    cursor.execute(sql,ocrlist)
+    
+    # Sonuçları alıyoruz
+    results = cursor.fetchall()
+
+
+    # Cursor ve bağlantıyı kapatıyoruz
+    cursor.close()
+    conn.close()
+
+    return results
+
+
+
 
 """
 #Kelime metin içindeki kelimelerde var mı kontrol etmeyi sağlıyor
